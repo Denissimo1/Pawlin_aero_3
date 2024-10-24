@@ -5,7 +5,7 @@
 #include <string>
 #include "IP/GetMatches.h"
 #include <time.h> 
-#include "Camera.h"
+//#include "Camera.h"
 #include <fstream>
 #include "Mathematic.h"
 #define GEOGRAPHICLIB_SHARED_LIB 1
@@ -173,7 +173,7 @@ void solveH(const cv::Mat& H, cv::Mat& Rr, cv::Mat &Tt)
 	//Rodrigues(R, Rr);
 }
 
-
+/*
 void draw_2D_trajectoru(const std::vector<Camera>& cams)
 {
 	const double *data = cams[0].T.ptr<double>(0);
@@ -194,8 +194,8 @@ void draw_2D_trajectoru(const std::vector<Camera>& cams)
 
 	cv::imshow("Trace", field);
 	cv::waitKey(0);
-}
-
+}*/
+/*
 void save_traj_csv(const std::vector<Camera>& cams, const std::string &fn)
 {
 	ofstream fout(fn); // создаём объект класса ofstream для записи и связываем его с файлом cppstudio.txt
@@ -206,7 +206,7 @@ void save_traj_csv(const std::vector<Camera>& cams, const std::string &fn)
 		fout << a[0] << ";" << a[1] << ";" << a[2] << ";" << p[0] << ";" << p[1] << ";" << p[2] << "\n";
 	}
 	fout.close();
-}
+}*/
 
 void crop_props(std::vector<cv::Point2f> &v1, std::vector<cv::Point2f> &v2)
 {
@@ -461,8 +461,8 @@ void make_hor_v(const std::vector<uint64_t> &ts, const std::vector<cv::Point2d> 
 double rangle(double a, double b)
 {
 	double r = a - b;
-	if (r > PI) r = r - 2*PI;
-	if (r < -PI) r = r + 2*PI;
+	if (r > 3.1415) r = r - 2* 3.1415;
+	if (r < -3.1415) r = r + 2* 3.1415;
 	return r;
 }
 
@@ -470,7 +470,7 @@ void make_ang_v(const std::vector<uint64_t> &ts, const std::vector<cv::Point3d> 
 {
 	double dt = 0;
 	double vx = 0, vy = 0, vz = 0, vh = 0;
-	double a = 0.2;
+	double a = 0.1;
 	for (size_t i = 0; i < p.size() - 1; i++)
 	{
 		dt = ((double)(ts[i + 1] - ts[i])) / 1000000.0;
@@ -496,6 +496,8 @@ void save_synchronized_data(const std::string& fn, const std::vector<uint64_t> &
 		//";"<< "f[8]" << ";" << "f[9]" << ";" << "f[10]" << ";" << "f[11]" << ";" << "f[12]" << ";" << "f[13]" << ";" << "f[14]" << ";" << "f[15]" <<
 		//";"<<"f[16]" << ";" << "f[17]" << ";" << "f[18]" << ";" << "f[19]" << ";" << "f[20]" << ";" << "f[21]" << ";" << "f[22]" << ";" << "f[23]"<<
 		";" << "ang_vel.x" << ";" << "ang_vel.y" << ";"<< "ang_vel.z" << ";" << "hv"<<";"<< "vel" << "\n";
+		//";" << "hv" << "\n";
+		//";" << "ang_vel.x" << ";" << "ang_vel.y" << ";" << "ang_vel.z" << ";" << "vel" << "\n";
 	for (size_t i = 0; i < ts_frame.size(); i++)
 	{
 		std::vector<float > f = features[i];
@@ -536,6 +538,8 @@ void save_synchronized_data(const std::string& fn, const std::vector<uint64_t> &
 			// f[8] << ";" << f[9] << ";" << f[10] << ";" << f[11] << ";" << f[12] << ";" << f[13] << ";" << f[14] << ";" << f[15] << ";" <<
 			// f[16] << ";" << f[17] << ";" << f[18] << ";" << f[19] << ";" << f[20] << ";" << f[21] << ";" << f[22] << ";" << f[23] << ";" <<
 			cur_ang_vel.x << ";" << cur_ang_vel.y << ";" << cur_ang_vel.z << ";" << cur_hv << ";" << velf <<  "\n";
+			//cur_hv << "\n";
+			//cur_ang_vel.x << ";" << cur_ang_vel.y << ";" << cur_ang_vel.z << ";" << velf << "\n";
 	}
 	///зеркалированные данные 
 
@@ -583,6 +587,8 @@ void save_synchronized_data(const std::string& fn, const std::vector<uint64_t> &
 			// f[8] << ";" << f[9] << ";" << f[10] << ";" << f[11] << ";" << f[12] << ";" << f[13] << ";" << f[14] << ";" << f[15] << ";" <<
 			// f[16] << ";" << f[17] << ";" << f[18] << ";" << f[19] << ";" << f[20] << ";" << f[21] << ";" << f[22] << ";" << f[23] << ";" <<
 			cur_ang_vel.x << ";" << cur_ang_vel.y << ";" << cur_ang_vel.z << ";" << cur_hv << ";" << velf << "\n";
+			//cur_hv << "\n";
+			//cur_ang_vel.x << ";" << cur_ang_vel.y << ";" << cur_ang_vel.z << ";" << velf << "\n";
 	}
 
 
