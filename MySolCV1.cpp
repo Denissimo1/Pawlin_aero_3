@@ -29,7 +29,7 @@ namespace fs = std::filesystem;
 #define TEST
 
 
-int main()
+int main(int argc, char * argv[])
 {
 #ifdef TEST
 	SimpleNet model;
@@ -67,10 +67,14 @@ int main()
 	double all_tm = 0;
 	double k = 0.05;
 	
-	static fs::directory_iterator di(".\\data\\frame2");
-	static auto it = begin(di);
+	string path_name = ".\\data\\frame2";
+	if (argc > 1) path_name = argv[1];
 
-	cv::VideoWriter video("demo.avi", cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), 25, cv::Size(720, 480*2));
+	set<fs::path> sorted_by_name;
+	for (auto &entry : fs::directory_iterator(path_name))
+		sorted_by_name.insert(entry.path());
+
+	//cv::VideoWriter video("demo.avi", cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), 25, cv::Size(720, 480*2));
 
 	//карта в реалтайм
 	cv::Mat field(480,720, CV_8UC3, cv::Scalar(0, 0, 0));
@@ -91,14 +95,13 @@ int main()
 	cv::Point3d p;
 	float az_start = -0.45f;
 
-	while (true)
+	//while (true)
+	for (auto &filename : sorted_by_name)
 	{
 		ii++;
 		cv::Mat frame, grey;
-	
-		if (it == end(di)) break;
-		cv::Mat cropped_image = cv::imread(it->path().u8string());
-		it++;
+		cv::Mat cropped_image = cv::imread(filename.u8string());
+
 		if (cropped_image.empty())break;
 		cv::cvtColor(cropped_image, grey, cv::COLOR_BGRA2GRAY);
 		ts += 40000;
@@ -168,7 +171,7 @@ int main()
 		cv::vconcat(cropped_image, field, res_img);
 		cv::imshow("Trace", res_img);
 		cv::waitKey(1);
-		video.write(res_img);
+		//video.write(res_img);
 #ifndef TEST	
 		///data_grab
 		if (v1.size() > 15)
